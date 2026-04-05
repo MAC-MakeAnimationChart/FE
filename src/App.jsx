@@ -1,17 +1,20 @@
 import { Route, Routes } from 'react-router-dom'
 import Login from './pages/Login'
-import Main from './pages/Main'
+import MainPage from './pages/MainPage'
+import Mypage from './pages/Mypage'
+import './App.css'
 
 function App() {
 
   return (
     <>
       <Routes>
-        <Route path='/' element={<Login />} >
+        <Route path='/' element={< MainPage />} >
           {/* <Route index element={ } />
           <Route action='' element={ } /> */}
         </Route>
-        <Route path='/main' element={<Main />} />
+        <Route path='/main' element={<Login />} />
+        <Route path='/mypage' element={<Mypage />} />
       </Routes>
     </>
   )
