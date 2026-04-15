@@ -1,0 +1,160 @@
+import { useEffect, useRef } from 'react';
+import * as echarts from 'echarts';
+
+export function ChartPreview({ data, settings }) {
+    const chartRef = useRef(null);
+    const chartInstanceRef = useRef(null);
+
+    useEffect(() => {
+        if (!chartRef.current || data.length === 0 || !settings.categoryColumn || !settings.valueColumn) {
+            return;
+        }
+
+        if (!chartInstanceRef.current) {
+            chartInstanceRef.current = echarts.init(chartRef.current);
+        }
+
+        const chart = chartInstanceRef.current;
+
+        const filteredData = data
+            .slice(0, settings.topN)
+            .map(row => ({
+                category: String(row[settings.categoryColumn]),
+                value: Number(row[settings.valueColumn]) || 0
+            }));
+
+        const categories = filteredData.map(d => d.category);
+        const values = filteredData.map(d => d.value);
+
+        // pie / donut / treemap용 데이터
+        const pieData = filteredData.map(d => ({
+            name: d.category,
+            value: d.value
+        }));
+
+        // 차트 타입별 series 분기
+        let series;
+
+        switch (settings.chartType) {
+            case 'pie':
+                series = [
+                    {
+                        type: 'pie',
+                        radius: '60%',
+                        data: pieData,
+                        label: { show: true }
+                    }
+                ];
+                break;
+
+            case 'donut':
+                series = [
+                    {
+                        type: 'pie',
+                        radius: ['40%', '70%'],
+                        data: pieData,
+                        label: { show: true }
+                    }
+                ];
+                break;
+
+            case 'treemap':
+                series = [
+                    {
+                        type: 'treemap',
+                        data: pieData,
+                        label: { show: true },
+                        breadcrumb: { show: false }
+                    }
+                ];
+                break;
+
+            default:
+                series = [
+                    {
+                        type: 'bar',
+                        data: values,
+                        itemStyle: {
+                            color: settings.barColor,
+                            opacity: settings.barOpacity / 100,
+                        },
+                        barWidth: `${settings.barWidth}%`,
+                        barGap: settings.barGap,
+                        label: {
+                            show: true,
+                            position: 'right',
+                        },
+                    }
+                ];
+        }
+
+        const option = {
+            backgroundColor: settings.backgroundColor,
+
+            tooltip: {
+                trigger: settings.chartType === 'bar' ? 'axis' : 'item'
+            },
+
+            title: [
+                {
+                    text: settings.mainTitle,
+                    left: settings.mainTitlePosition,
+                },
+                {
+                    text: settings.subTitle,
+                    left: settings.subTitlePosition,
+                },
+            ],
+
+            legend: {
+                show: settings.showLegend,
+                bottom: 10
+            },
+
+            grid: settings.chartType === 'bar' ? {
+                left: '10%',
+                right: '10%',
+                top: 80,
+                bottom: 60,
+                containLabel: true,
+            } : undefined,
+
+            xAxis: settings.chartType === 'bar' ? {
+                type: 'value'
+            } : undefined,
+
+            yAxis: settings.chartType === 'bar' ? {
+                type: 'category',
+                data: categories
+            } : undefined,
+
+            series
+        };
+
+        chart.setOption(option);
+
+        const handleResize = () => {
+            chart.resize();
+        };
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [data, settings]);
+
+    useEffect(() => {
+        return () => {
+            if (chartInstanceRef.current) {
+                chartInstanceRef.current.dispose();
+                chartInstanceRef.current = null;
+            }
+        };
+    }, []);
+
+    return (
+        <div className="h-full w-full bg-white rounded-lg">
+            <div ref={chartRef} className="w-full h-full" />
+        </div>
+    );
+}
