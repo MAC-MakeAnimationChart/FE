@@ -7,6 +7,7 @@ export interface ChartSettings {
   topN: number;
   categoryColumn: string;
   valueColumn: string;
+  chartType: 'bar' | 'proportionalBar' | 'gridBar' | 'barRace';
   
   // 차트 색상
   barColor: string;
@@ -48,6 +49,7 @@ export const DEFAULT_CHART_SETTINGS: ChartSettings = {
   topN: 10,
   categoryColumn: '',
   valueColumn: '',
+  chartType: 'bar',
   
   barColor: '#3b82f6',
   backgroundColor: '#ffffff',
