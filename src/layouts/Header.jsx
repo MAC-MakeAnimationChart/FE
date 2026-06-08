@@ -8,13 +8,13 @@ function Header() {
 
     const navigate = useNavigate();
     const handleClick = () => {
-        navigate(`/main`)
+        navigate(`/`)
     }
     return (
         <div className='header'>
             <img src={macImg} alt="mac" onClick={handleClick} />
             <h2>MAC</h2>
-            <p style={{ position: 'absolute', justifySelf: 'right', marginRight: 20 }} >
+            <p style={{ position: 'absolute', justifySelf: 'right', marginRight: 20 }} onClick={()=>{navigate('/login')}} onMouseOver={{cursor:'pointer'}}>
                 {pathname === '/' ? '로그인' : ''}
             </p>
         </div>

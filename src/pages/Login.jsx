@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import MainLayout from '../layouts/MainLayout'
+import axios from 'axios';
 
 
 function Login() {
@@ -15,10 +16,20 @@ function Login() {
             [e.target.name]: e.target.value
         })
     }
+    const handleLogin = async (e) => {
+        e.preventDefault();
+
+        try {
+            const res = await axios.post('http://localhost:5173/main', user);
+            console.log(res.data);
+        } catch (err) {
+            console.error(err);
+        }
+    };
     return (
         <>
             <MainLayout>
-                <form method='get' className='login-container'>
+                <form onSubmit={handleLogin} className='login-container'>
                     <h1>로그인</h1>
                     <label htmlFor="userId">ID : </label>
                     <input
