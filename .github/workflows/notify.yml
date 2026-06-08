@@ -1,0 +1,12 @@
+name: Discord Notification
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  discord:
+    uses: MAC-MakeAnimationChart/.github/.github/workflows/discord-notify.yml@main
+    secrets:
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}

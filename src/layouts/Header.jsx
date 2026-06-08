@@ -14,8 +14,8 @@ function Header() {
         <div className='header'>
             <img src={macImg} alt="mac" onClick={handleClick} />
             <h2>MAC</h2>
-            <p style={{ position: 'absolute', justifySelf: 'right', marginRight: 20 }}>
-                {pathname === '/main' ? '로그인' : ''}
+            <p style={{ position: 'absolute', justifySelf: 'right', marginRight: 20 }} >
+                {pathname === '/' ? '로그인' : ''}
             </p>
         </div>
     )

@@ -13,7 +13,8 @@ function App() {
           {/* <Route index element={ } />
           <Route action='' element={ } /> */}
         </Route>
-        <Route path='/main' element={<Login />} />
+        <Route path='/main' element={<MainPage />} />
+        <Route path='/login' element={<Login />} />
         <Route path='/mypage' element={<Mypage />} />
       </Routes>
     </>
